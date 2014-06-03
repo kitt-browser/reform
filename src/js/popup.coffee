@@ -104,10 +104,12 @@ api = {
   # Returns `[wrapper, inputs]` where `wrapper` is the closest common ancestor
   # of inputs in `$form` and inputs are, well, the inputs, duh.
   getWrappedInputs: ($form) ->
-    $inputs = $form.find('input').not('[type="hidden"]').not('[type="image"]')
+    $form.find('script').remove()
+    $form.find('input[type="image"]').remove()
+    $form.find('input[type="hidden"]').remove()
+    $form.find('img').remove()
+    $inputs = $form.find('input')
     $ancestor = $inputs.commonAncestor()
-    $ancestor.find('input[type="image"]').remove()
-    $ancestor.find('img').remove()
     return [$ancestor, $inputs]
 }
 
