@@ -6,6 +6,7 @@ chai = require('../../node_modules/sinon')
 
 popup = require('./popup.coffee')
 
+
 describe "popup", ->
 
   describe "getWrappedInputs", ->

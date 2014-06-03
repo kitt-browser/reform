@@ -1,7 +1,7 @@
 $ = require('../vendor/jquery/jquery')
 _ = require('../vendor/underscore/underscore')
 
-require('../vendor/bootstrap/bootstrap')
+#require('../vendor/bootstrap/bootstrap')
 require('../vendor/bootstrap/bootstrap.css')
 
 
