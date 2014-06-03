@@ -39,6 +39,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-mocha-test'
   grunt.loadNpmTasks 'grunt-mocha-phantomjs'
   grunt.loadNpmTasks 'grunt-contrib-connect'
+  grunt.loadNpmTasks 'grunt-notify'
 
   grunt.initConfig
   
@@ -91,13 +92,13 @@ module.exports = (grunt) ->
     watch:
       browserify:
         files: ['src/**/*.coffee', 'src/**/*.css']
-        tasks: ['browserify:dev', 'crx:main']
+        tasks: ['browserify:dev']
       other:
         files: ['src/**/*.jade', 'src/img/**/*.*', 'src/manifest.json']
-        tasks: ['copy', 'browserify:dev', 'crx:main']
+        tasks: ['copy', 'browserify:dev']
       test:
         files: ['src/**/*.coffee']
-        tasks: ['_test']
+        tasks: ['_test', 'notify:build_complete']
 
     copy:
       manifest:
@@ -124,13 +125,7 @@ module.exports = (grunt) ->
             src: ['**/*.html']
             cwd: 'src/html'
             dest: "#{BUILD}/html"
-          }, {
-            expand: yes
-            src: ['vendor/jquery-ui-scalebreaker/iscroll-lite.js']
-            cwd: 'src'
-            dest: "#{BUILD}/js"
           }
-
         ]
     crx:
       main:
@@ -169,12 +164,18 @@ module.exports = (grunt) ->
             mochaPhantomJsTestRunner
           ]
 
+    notify:
+      build_complete:
+        options:
+          title: 'Build'
+          message: 'Extension built'
+
   grunt.registerTask "generateCrx", ['crx:main']
 
   
   grunt.registerTask "default", ['jshint', 'clean', 'browserify:dist', 'copy', 'generateCrx']
-  grunt.registerTask "dev", ['connect:server', '_test', 'browserify:dev', 'watch']
-  grunt.registerTask "_test", ['jshint', 'clean:test', 'copy', 'browserify:test', 'mocha_phantomjs']
+  grunt.registerTask "dev", ['connect:server', 'browserify:dev', '_test', 'watch']
+  grunt.registerTask "_test", ['copy', 'browserify:test', 'mocha_phantomjs']
 
   grunt.registerTask "test", ['connect:server', 'jshint', 'clean:test', 'copy', 'browserify:test', 'mocha_phantomjs']
 

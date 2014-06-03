@@ -14,7 +14,19 @@ _jQuery = $.noConflict(true)
   console.log 'content script ready'
   chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
     console.log('message received:', request)
-    sendResponse({forms: api.getForms()})
+    switch request.cmd
+      when 'getForms'
+        res = []
+        api.getForms().each ->
+          outerHTML = $('<p>').append($(this).eq(0).clone()).html()
+          res.push outerHTML
+        sendResponse({forms: res})
+        return
+      when 'fillInputs'
+        #console.log 'filling inputs', _.filter _.keys(request.data), (item) ->
+        #  request.data[item]?
+        for sel, val of request.data
+          api.getForms().find(sel).val(val)
 
 )(_jQuery)
 
